@@ -1,0 +1,112 @@
+The Open Systems Interconnection (OSI) model is a conceptual framework that divides network communication into seven distinct layers to help us understand how hardware and software work together
+. To easily remember the layers from bottom to top (Layer 1 to Layer 7), you can use the mnemonic "Please Do Not Throw Sausage Pizza Away."
+.
+Here is an explanation of each layer, working from the top (closest to the user) down to the bottom (the physical hardware), along with real-world examples:
+7. Application Layer This layer serves as the direct interface between the network and your end-user applications
+. It is not the application itself, but rather the protocols that allow the application to access network resources
+.
+Real-world example: When you open a web browser and type in a URL, the browser acts as the application using the HTTP protocol to prepare your request for the network
+. Another example is an email client, like Outlook, using the SMTP protocol to send a message
+.
+6. Presentation Layer Also known as the syntax layer, this step is responsible for translating, formatting, compressing, and encrypting data so that it can be understood by the receiving application
+.
+Real-world example: If you are sending a highly sensitive email to a colleague, the presentation layer encrypts the email data to ensure it is secure during transmission
+. It is also responsible for handling familiar file formats like JPEG images or video files, so they display correctly
+.
+5. Session Layer The session layer establishes, manages, and terminates connections—known as "sessions"—between local and remote applications
+. It tracks these conversations and ensures they stay open long enough for data to be exchanged
+.
+Real-world example: When a user in New York emails a colleague in London, the session layer opens and manages the connection between the sender's email server and the receiver's email server, keeping it active until the entire email is successfully transferred
+.
+4. Transport Layer Data from the upper layers can be very large, so the transport layer breaks it down into manageable chunks called "segments" (for TCP) or "datagrams" (for UDP)
+. It provides end-to-end communication, assigns port numbers to identify which application the data belongs to, and handles flow control and error recovery
+.
+Real-world example: When you are loading a webpage, this layer uses the Transmission Control Protocol (TCP) to ensure all segments arrive reliably and in order
+. Alternatively, if you are playing a fast-paced online video game or streaming video, this layer might use the User Datagram Protocol (UDP) for faster transmission, sacrificing perfect reliability for speed
+.
+3. Network Layer This layer is responsible for routing data across different networks, turning segments into "packets" by adding logical addressing (IP addresses) to the data header
+. It determines the best physical path for the data to take to reach its final destination
+.
+Real-world example: When you send an email overseas, the network layer attaches the source IP address (your computer) and the destination IP address (the London server) so that the internet's routers know exactly how to forward the packet across multiple networks to reach the correct country
+.
+2. Data Link Layer While the network layer gets data across the globe, the data link layer is strictly responsible for node-to-node delivery on a single local network segment
+. It packages packets into "frames," adds physical MAC (Media Access Control) addresses, and provides error detection
+.
+Real-world example: When your computer wants to send data out to the internet, the data link layer uses the Ethernet protocol to establish a logical link with your home router, wrapping the data in a frame addressed specifically to the router's MAC address
+.
+1. Physical Layer The bottom layer defines the physical and hardware elements of the network connection
+. It is responsible for converting the data frames into raw binary bits (1s and 0s) and transmitting them as signals over the physical medium
+.
+Real-world example: Converting data into pulsing light to travel down underwater fiber-optic cables, encoding it as electrical signals over a copper wire, or broadcasting it as radio frequencies from a Wi-Fi access point
+.
+
+Network to subnet: 192.168.1.0/24
+Requirement: Divide it into at least 6 subnets (a frequent task — enough for departments, VLANs, etc., but not too many to waste addresses).
+To create at least 6 subnets from a /24 network, we borrow 3 bits from the host portion (because 2³ = 8 subnets > 6; 2² = 4 subnets is not enough).
+New subnet mask: /27 (255.255.255.224)
+This gives us:
+
+8 possible subnets (we'll use the first 6 for the example)
+32 addresses per subnet (30 usable hosts per subnet after subtracting network + broadcast)
+
+How I Calculated It
+I used a reliable online subnet calculator (subnet-calculator.com and cross-checked with calculator.net and mxtoolbox.com).
+Steps in the calculator:
+
+Enter IP: 192.168.1.0
+Enter original mask: /24 (or 255.255.255.0)
+Request: maximum subnets = 8 (or new mask bits = 27, or subnet bits = 3)
+Calculate
+
+Documented Results
+Original Network
+
+Address: 192.168.1.0
+Mask: 255.255.255.0 (/24)
+Total addresses: 256
+Usable hosts: 254
+
+After Subnetting (into /27 subnets)
+
+New mask: 255.255.255.224 (/27)
+Subnet increment: 32 (256 ÷ 8 = 32)
+Subnets created: 8
+Addresses per subnet: 32
+Usable hosts per subnet: 30 (32 – 2)
+
+Subnet #,Network Address,Subnet Mask,CIDR,Broadcast Address,First Usable Host,Last Usable Host,Usable Hosts,Total Addresses
+1,192.168.1.0,255.255.255.224,/27,192.168.1.31,192.168.1.1,192.168.1.30,30,32
+2,192.168.1.32,255.255.255.224,/27,192.168.1.63,192.168.1.33,192.168.1.62,30,32
+3,192.168.1.64,255.255.255.224,/27,192.168.1.95,192.168.1.65,192.168.1.94,30,32
+4,192.168.1.96,255.255.255.224,/27,192.168.1.127,192.168.1.97,192.168.1.126,30,32
+5,192.168.1.128,255.255.255.224,/27,192.168.1.159,192.168.1.129,192.168.1.158,30,32
+6,192.168.1.160,255.255.255.224,/27,192.168.1.191,192.168.1.161,192.168.1.190,30,32
+7,192.168.1.192,255.255.255.224,/27,192.168.1.223,192.168.1.193,192.168.1.222,30,32
+8,192.168.1.224,255.255.255.224,/27,192.168.1.255,192.168.1.225,192.168.1.254,30,32
+
+
+The TCP/IP protocol suite is the foundational framework for modern internet communication, defining how network hardware and software work together to deliver data
+. To understand how the TCP/IP model operates in a real-world scenario, we can trace the journey of a user loading a web page from a remote server.
+The data flows through the following layers, starting from the user's application down to the physical cables:
+Application Layer: The process begins when a user types a URL into their web browser
+. The browser acts as the client application and uses the Hypertext Transfer Protocol (HTTP) to prepare a request for the web page
+. This layer is concerned strictly with how applications communicate and encode data, not the physical delivery mechanics
+.
+Transport Layer: The HTTP request is passed down to the Transport layer, which utilizes the Transmission Control Protocol (TCP) to create and manage the session
+. TCP packages the data into a chunk called a segment
+. Crucially, it adds port numbers to track the applications involved; it assigns the destination port as Port 80 (the standard port the web server software listens on) and generates a random source port for the client's browser
+.
+Network Layer: The segment is then passed down to the Network layer, which uses the Internet Protocol (IP) to package the segment into a packet
+. The protocol adds an IP header that includes the source IP address (the client) and destination IP address (the server)
+. This logical addressing is what allows the internet's routers to navigate the packet across various separate networks to its final destination
+.
+Data Link Layer: While the Network layer handles end-to-end addressing, the Data Link layer handles node-to-node delivery over a single local network
+. Using a protocol like Ethernet, it wraps the IP packet into a frame
+. It adds a header containing the physical MAC addresses of the local sender and the next immediate device (such as the local router)
+. If the packet must traverse the internet, these MAC addresses are stripped and rewritten at every single router hop, even though the IP addresses remain unchanged
+.
+Physical Layer: Finally, the frame reaches the bottom layer, where it is converted into bits (1s and 0s) and encoded into physical signals—such as electrical impulses over copper wire, radio waves via Wi-Fi, or pulses of light through fiber optic cables
+.
+When these signals reach the destination web server, the entire process happens in reverse
+. The server receives the signals at the Physical layer, strips the MAC addresses off the frame at the Data Link layer, verifies the destination IP address at the Network layer, and uses the port numbers at the Transport layer to direct the HTTP request directly to the web server software
+. The server application processes the HTTP request and sends the actual web page data back to the client following the exact same multi-layered TCP/IP sequence
