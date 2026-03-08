@@ -18,12 +18,65 @@ Layer 7 - Application: Provides the direct interface and protocols (like HTTP or
 .
 When sending data, the information flows down these layers on the sender's side—encapsulating the data with headers at each step—and flows back up the layers on the receiver's side to be decapsulated
 .
-IP Addressing Calculations As noted in our earlier conversation, the provided sources do not contain the mathematical formulas or tools required to perform specific IP addressing or subnetting calculations. However, they do explain the underlying concepts of IP addressing:
-An IP address operates at the Network Layer (Layer 3) and is used to route packets across multiple network boundaries
-.
-An IP address essentially consists of two parts: a network number and a host number, which allows routers to view an entire internetwork as a single network from the outside
-.
-The sources outline the structure of an IPv4 packet header—which includes 32-bit source and destination IP addresses—and mention that networks can be segmented (subnetting), but they do not provide the calculator functions or mathematical steps to execute that segmentation
+IP Addressing Calculations
+1. IPv4 Address Basics
+
+An IPv4 address is a 32-bit number, written in dotted-decimal format (4 octets, e.g., 192.168.1.10).
+Each octet = 8 bits → range 0–255 per octet.
+Total possible addresses: 2³² ≈ 4.3 billion.
+Divided into two logical parts:
+Network portion — identifies the network (or subnet).
+Host portion — identifies individual devices on that network.
+
+
+2. Subnet Mask & CIDR Notation
+
+Subnet mask — 32-bit value that separates network bits from host bits (e.g., 255.255.255.0).
+CIDR notation (Classless Inter-Domain Routing) — shorthand like /24, where the number after the slash is the count of network bits (leading 1s in the mask).
+Example: 192.168.1.0**/24** → first 24 bits = network, last 8 bits = hosts.
+
+Common masks:
+/8 → 255.0.0.0 (Class A-like)
+/16 → 255.255.0.0 (Class B-like)
+/24 → 255.255.255.0 (Class C-like, most common for small networks)
+
+
+3. Key Calculations & Formulas
+
+Total addresses in a subnet = 2^(32 - prefix_length)
+Example: /24 → 2^(32-24) = 2⁸ = 256 addresses.
+Usable hosts per subnet = 2^(32 - prefix_length) - 2
+(Subtract 2 for: network address + broadcast address.)
+Example: /24 → 256 - 2 = 254 usable hosts.
+Number of subnets when borrowing bits = 2^n
+where n = number of bits borrowed from host portion.
+Example: Start with /24, borrow 2 bits → 2² = 4 subnets, new mask /26.
+Addresses per subnet after borrowing = 2^(remaining host bits).
+
+4. Subnetting Process (Step-by-Step Summary)
+
+Start with base network (e.g., 192.168.1.0/24).
+Determine requirement: number of subnets or hosts per subnet.
+Calculate bits to borrow:
+For subnets: find smallest n where 2^n ≥ required subnets.
+For hosts: find smallest h where 2^h - 2 ≥ required usable hosts, then prefix = 32 - h.
+
+New mask = original prefix + borrowed bits.
+Subnet increment (block size) = 256 ÷ number of subnets (or 2^(8 - borrowed bits in last octet)).
+List subnets by adding increment repeatedly:
+Network, first usable, last usable, broadcast for each.
+
+
+Example quick calc: 192.168.1.0/24 → need 6 subnets
+→ Borrow 3 bits (2³=8 ≥6) → /27 mask (255.255.255.224)
+→ Increment = 32
+→ Subnets: 192.168.1.0/27, .32/27, .64/27, .96/27, .128/27, .160/27, etc.
+→ Each has 32 addresses → 30 usable hosts.
+5. CIDR vs. Classful vs. VLSM
+
+Classful (old): Fixed classes A (/8), B (/16), C (/24) — wasteful.
+CIDR (modern): Flexible prefix lengths, no class boundaries → efficient allocation + route summarization.
+VLSM (Variable Length Subnet Masking): Apply different subnet sizes within the same major network (e.g., one /27 for 30 hosts, one /30 for 2 hosts on a link) → maximizes address usage, reduces waste.
 .
 TCP/IP Analysis While the OSI model is a generic reference framework, the TCP/IP model is the practical, functional framework that the modern internet is actually built upon
 . It simplifies the OSI model by combining OSI layers 5, 6, and 7 into a single Application Layer, and OSI layers 1 and 2 into a single Network Access/Link Layer
